@@ -128,7 +128,7 @@ def main(input, verbose, extract, noname_files, list_files, extract_dir):
                 print("    .Timestamp =", ts)
                 print("    .Flags     =", r.Flags)
             else:
-                print(f"{i:3d}   {r.Len:5d}   {ts}   {get_string(fs, r.StringPtr)}")
+                print(f"{i:4d}   {r.Len:8d}   {ts}   {get_string(fs, r.StringPtr)}")
 
         if extract:
             f = export / get_string(fs, r.StringPtr, True)
