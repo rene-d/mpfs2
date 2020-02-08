@@ -1,10 +1,8 @@
 import sys
 from setuptools import setup, find_packages
 from os import path
-from subprocess import check_output
 
 here = path.abspath(path.dirname(__file__))
-git_tag = check_output("git describe --tags", shell=True).decode().strip()
 
 # Get the long description from the README file
 with open(path.join(here, "README.md"), encoding="utf-8") as f:
@@ -12,7 +10,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="mpfs2",
-    version=git_tag,
+    version="0.0.3",
     description="Extract files from a Microchip Proprietary File System (MPFS2)",
     long_description=long_description,
     long_description_content_type="text/markdown",
