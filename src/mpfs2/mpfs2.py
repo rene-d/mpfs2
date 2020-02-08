@@ -63,10 +63,10 @@ FileRecord = namedtuple("FileRecord", ["StringPtr", "DataPtr", "Len", "Timestamp
 @click.argument("input", type=click.File("rb"), nargs=1)
 @click.option("-v", "--verbose", help="be verbose", is_flag=True)
 @click.option("-x", "--extract", help="extract files", is_flag=True)
-@click.option("-a", "--all", "extract_noname", help="also extract files with no name", is_flag=True)
+@click.option("-a", "--all", "noname_files", help="also extract files with no name", is_flag=True)
 @click.option("-l", "--list", "list_files", help="list files", is_flag=True)
 @click.option("-d", "--extract-dir", default="export", help="directory to extract files", type=click.Path())
-def main(input, verbose, extract, extract_noname, list_files, extract_dir):
+def main(input, verbose, extract, noname_files, list_files, extract_dir):
 
     fs = input.read()
 
@@ -113,6 +113,9 @@ def main(input, verbose, extract, extract_noname, list_files, extract_dir):
 
     for i, r in enumerate(record):
 
+        if fs[r.StringPtr] == 0 and not noname_files:
+            continue
+
         ts = datetime.datetime.fromtimestamp(r.Timestamp).strftime("%Y-%m-%dT%H:%M:%SZ")
 
         if list_files:
@@ -128,8 +131,6 @@ def main(input, verbose, extract, extract_noname, list_files, extract_dir):
                 print(f"{i:3d}   {r.Len:5d}   {ts}   {get_string(fs, r.StringPtr)}")
 
         if extract:
-            if fs[r.StringPtr] == 0 and not extract_noname:
-                continue
             f = export / get_string(fs, r.StringPtr, True)
             f.parent.mkdir(exist_ok=True, parents=True)
 
