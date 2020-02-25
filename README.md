@@ -17,8 +17,8 @@ pip3 install mpfs2
 
 ### Commandline
 
-```
-Usage: mpfs2.py [OPTIONS] INPUT
+```text
+Usage: mpfs2 [OPTIONS] MPF2_FILE
 
 Options:
   -v, --verbose           be verbose

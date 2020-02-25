@@ -10,7 +10,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="mpfs2",
-    version="1.0.0",
+    version="1.0.1",
     description="Extract files from a Microchip Proprietary File System (MPFS2)",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -18,6 +18,7 @@ setup(
     author="Rene Devichi",
     author_email="rene.github@gmail.com",
     classifiers=[
+        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
