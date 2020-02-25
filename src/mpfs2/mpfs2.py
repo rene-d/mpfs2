@@ -48,27 +48,26 @@
 
 # ref: https://github.com/x893/Microchip/blob/master/Microchip/TCPIP%20Stack/MPFS2.c
 
+import datetime
+import pathlib
 import struct
 from collections import namedtuple
-import time
-import pathlib
-import click
-import datetime
 
+import click
 
 FileRecord = namedtuple("FileRecord", ["StringPtr", "DataPtr", "Len", "Timestamp", "Microtime", "Flags"])
 
 
 @click.command()
-@click.argument("input", type=click.File("rb"), nargs=1)
+@click.argument("mpfs2_file", type=click.File("rb"), nargs=1)
 @click.option("-v", "--verbose", help="be verbose", is_flag=True)
 @click.option("-x", "--extract", help="extract files", is_flag=True)
 @click.option("-a", "--all", "noname_files", help="also extract files with no name", is_flag=True)
 @click.option("-l", "--list", "list_files", help="list files", is_flag=True)
 @click.option("-d", "--extract-dir", default="export", help="directory to extract files", type=click.Path())
-def main(input, verbose, extract, noname_files, list_files, extract_dir):
+def main(mpfs2_file, verbose, extract, noname_files, list_files, extract_dir):
 
-    fs = input.read()
+    fs = mpfs2_file.read()
 
     signature = fs[0:4]
     if signature != b"MPFS":
@@ -83,9 +82,9 @@ def main(input, verbose, extract, noname_files, list_files, extract_dir):
     print(f"Number of files: {n}")
 
     offset = 8
-    hash = [0] * n
+    name_hash = [0] * n
     for i in range(n):
-        (hash[i],) = struct.unpack("<H", fs[offset : offset + 2])
+        (name_hash[i],) = struct.unpack("<H", fs[offset : offset + 2])
         offset += 2
 
     record = [None] * n
@@ -140,4 +139,4 @@ def main(input, verbose, extract, noname_files, list_files, extract_dir):
 
 
 if __name__ == "__main__":
-    exit(main())
+    main()
