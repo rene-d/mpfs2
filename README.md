@@ -2,6 +2,7 @@
 
 ![](https://github.com/rene-d/mpfs2/workflows/Publish%20to%20PyPI/badge.svg)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/53cc11afa1b243959d3c6401cc6d8392)](https://app.codacy.com/manual/rene-d/mpfs2?utm_source=github.com&utm_medium=referral&utm_content=rene-d/mpfs2&utm_campaign=Badge_Grade_Settings)
+[![Coverage Status](https://coveralls.io/repos/github/rene-d/mpfs2/badge.svg?branch=master)](https://coveralls.io/github/rene-d/mpfs2?branch=master)
 [![pyi](https://img.shields.io/pypi/v/mpfs2.svg)](https://pypi.python.org/pypi/mpfs2)
 [![pyi](https://img.shields.io/pypi/pyversions/mpfs2.svg)](https://pypi.python.org/pypi/mpfs2)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)

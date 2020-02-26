@@ -35,5 +35,8 @@ jobs:
           coverage xml
           curl -LS -o codacy-coverage-reporter-assembly.jar "$(curl -LSs https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | endswith(".jar"))) | .[0].browser_download_url')"
           java -jar codacy-coverage-reporter-assembly.jar report -l python -r coverage.xml
+          python -m pip install --upgrade coveralls
+          coveralls
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.codacy_token }}
+          COVERALLS_REPO_TOKEN: ${{ secrets.coveralls_token }}
