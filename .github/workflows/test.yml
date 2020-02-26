@@ -30,11 +30,14 @@ jobs:
           coverage run tests/test_mpfs2.py
 
       - name: Upload coverage
-        if: (${{ matrix.python-version }} == "3.8") && (${{ matrix.os }} == "ubuntu-latest")
+        #if: (${{ matrix.python-version }} == "3.8") && (${{ matrix.os }} == "ubuntu-latest")
+        if: "matrix.python-version == 3.8 && matrix.os == ubuntu-latest"
         run: |
           coverage xml
-          curl -Ls -o codacy-coverage-reporter "$(curl -Ls https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | contains("codacy-coverage-reporter-linux"))) | .[0].browser_download_url')"
-          chmod +x codacy-coverage-reporter
-          ./codacy-coverage-reporter report -l Python -r coverage.xml
+          #curl -Ls -o codacy-coverage-reporter "$(curl -Ls https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | contains("codacy-coverage-reporter-linux"))) | .[0].browser_download_url')"
+          #chmod +x codacy-coverage-reporter
+          #./codacy-coverage-reporter report -l Python -r coverage.xml
+          curl -LS -o codacy-coverage-reporter-assembly.jar "$(curl -LSs https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets | map({name, browser_download_url} | select(.name | endswith(".jar"))) | .[0].browser_download_url')"
+          java -jar codacy-coverage-reporter-assembly.jar report  -l python -r coverage.xml
         env:
           PROJECT_TOKEN: ${{ secrets.codacy_token }}
