@@ -4,4 +4,4 @@
 .PHONY: out/test.bin
 
 out/test.bin: 
-	java -jar MPFS2.jar /xgzip '*.txt' /mpfs2 files . out/test.bin
+	java -jar MPFS2.jar /mpfs2 files . out/test.bin

@@ -133,8 +133,8 @@ def main(mpfs2_file, verbose, extract, list_files, list_variables, extract_dir):
 
     signature = fs[0:4]
     if signature != b"MPFS":
-        print("File is not a MPFS filesystem")
-        return 2
+        print("File is not a MPFS filesystem", file=sys.stderr)
+        exit(2)
 
     # process filesystem header
     ver_hi = fs[4]
@@ -241,5 +241,5 @@ def main(mpfs2_file, verbose, extract, list_files, list_variables, extract_dir):
             print(f"created: {f.as_posix()} {len(variables)} variables")
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

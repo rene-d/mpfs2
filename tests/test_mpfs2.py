@@ -62,8 +62,14 @@ class Mpfs2TestCase(unittest.TestCase):
         result = runner.invoke(mpfs2.main, args)
         self.assertEqual(result.exit_code, 0)
         self.assertTrue("Version: 2.1\n" in result.output)
-        self.assertTrue("Number of files: 3 (" in result.output)
-        self.assertTrue("Number of dynamic variables: 0\n" in result.output)
+        self.assertTrue("Number of files: 4 (" in result.output)
+        self.assertTrue("Number of dynamic variables: 1\n" in result.output)
+
+    def test_open_failed(self) -> None:
+        runner = CliRunner()
+        args = ["MPFS2/Makefile"]
+        result = runner.invoke(mpfs2.main, args)
+        self.assertEqual(result.exit_code, 2)
 
     def test_list(self) -> None:
         runner = CliRunner()
@@ -75,11 +81,11 @@ class Mpfs2TestCase(unittest.TestCase):
         for line in result.output.split("\n"):
             v = line.split()
             if len(v) == 5:
-                if v[2] == "142" and v[4] == "index.html":
+                if v[1] == "i-" and v[2] == "205" and v[4] == "index.html":
                     ok = ok + 1
-                if v[2] == "8" and v[4] == "data":
+                if v[1] == "--" and v[2] == "8" and v[4] == "data":
                     ok = ok + 100
-                if v[2] == "351" and v[4] == "protect/tree.txt":
+                if v[1] == "-z" and v[2] == "226" and v[4] == "protect/tree.txt":
                     ok = ok + 10000
         self.assertEqual(ok, 10101)
 
@@ -91,7 +97,15 @@ class Mpfs2TestCase(unittest.TestCase):
         self.assertIn("FileRecord 0:", result.output)
         self.assertIn("FileRecord 1:", result.output)
         self.assertIn("FileRecord 2:", result.output)
-        self.assertNotIn("FileRecord 3:", result.output)
+        self.assertIn("FileRecord 3:", result.output)
+        self.assertNotIn("FileRecord 4:", result.output)
+
+    def test_variables(self) -> None:
+        runner = CliRunner()
+        args = ["-V", "MPFS2/out/test.bin"]
+        result = runner.invoke(mpfs2.main, args)
+        self.assertEqual(result.exit_code, 0)
+        self.assertIn("\n0 dynamic\n", result.output)
 
     def test_extract(self) -> None:
         self.temp_dir = tempfile.mkdtemp()
