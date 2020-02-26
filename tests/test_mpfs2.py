@@ -2,7 +2,7 @@
 
 import filecmp
 import os
-import pathlib
+from pathlib import Path
 import shutil
 import tempfile
 import unittest
@@ -26,7 +26,7 @@ NVM_MEDIA_DATA = bytes([
 class Mpfs2TestCase(unittest.TestCase):
     def setUp(self):
         self.temp_dir = None
-        os.chdir(pathlib.Path(__file__).parent)
+        os.chdir(Path(__file__).parent)
 
     def tearDown(self):
         if self.temp_dir:
@@ -110,15 +110,17 @@ class Mpfs2TestCase(unittest.TestCase):
     def test_extract(self) -> None:
         self.temp_dir = tempfile.mkdtemp()
         runner = CliRunner()
-        args = ["-x", "-d", self.temp_dir, "MPFS2/out/test.bin"]
+        args = ["-x", "-v", "-d", self.temp_dir, "MPFS2/out/test.bin"]
         result = runner.invoke(mpfs2.main, args)
         self.assertEqual(result.exit_code, 0)
         dcmp = filecmp.dircmp("MPFS2/files", self.temp_dir)
         self.assertEqual(dcmp.diff_files, [])
         self.assertEqual(sorted(dcmp.same_files), sorted(["index.html", "data"]))
         self.assertEqual(dcmp.common_dirs, ["protect"])
+        shutil.rmtree(self.temp_dir)
+        self.temp_dir = None
 
-    def test_extract2(self) -> None:
+    def test_list2(self) -> None:
         tmp_mpfs2 = tempfile.NamedTemporaryFile("wb+")
         tmp_mpfs2.write(NVM_MEDIA_DATA)
         tmp_mpfs2.flush()
@@ -129,6 +131,22 @@ class Mpfs2TestCase(unittest.TestCase):
         self.assertEqual(result.exit_code, 0)
         self.assertIn(" FILE.txt\n", result.output)
         self.assertIn(" TEST.txt\n", result.output)
+
+    def test_extract2(self) -> None:
+        self.temp_dir = tempfile.mkdtemp()
+        temp_dir = Path(self.temp_dir)
+        tmp_mpfs2 = tempfile.NamedTemporaryFile("wb+")
+        tmp_mpfs2.write(NVM_MEDIA_DATA)
+        tmp_mpfs2.flush()
+        runner = CliRunner()
+        args = ["-x", "-v", "-d", self.temp_dir, tmp_mpfs2.name]
+        result = runner.invoke(mpfs2.main, args)
+        tmp_mpfs2.close()
+        self.assertEqual(result.exit_code, 0)
+        self.assertTrue((temp_dir / "FILE.txt").is_file())
+        self.assertTrue((temp_dir / "TEST.txt").is_file())
+        shutil.rmtree(self.temp_dir)
+        self.temp_dir = None
 
 
 if __name__ == "__main__":
